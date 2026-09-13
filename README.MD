@@ -39,5 +39,6 @@ Aplikasi ini menggunakan koleksi data berupa beberapa objek yang berkaitan denga
 ```text
 boolean-retrieval/
 │
-├── main.py
+├── app.py (Jawaban Tugas/No. 1)
+├── app2.py (Jawaban Tugas/No. 2)
 └── README.md
