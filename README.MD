@@ -2,7 +2,7 @@
 
 Aplikasi sederhana berbasis Python yang mengimplementasikan **Boolean Retrieval Model** untuk mencari objek atau dokumen berdasarkan kata kunci (*term*) menggunakan operasi logika Boolean, yaitu AND, OR, dan NOT.
 
-Aplikasi ini dibuat untuk memenuhi **Tugas 2 — Information Retrieval**.
+Aplikasi ini dibuat untuk memenuhi **Tugas-tugas kedepannya pada mata kuliah Information Retrieval**.
 
 ## 📌 Deskripsi
 
@@ -27,18 +27,12 @@ Aplikasi ini menggunakan koleksi data berupa beberapa objek yang berkaitan denga
 - Operasi Boolean **NOT**.
 - Penampilan objek yang sesuai dengan hasil pencarian.
 - Penanganan term yang tidak ditemukan dalam koleksi.
+- Perankingan skor menggunakan metode Jaccard.
+- Perankingan skor menggunakan metode Overlap.
+- Perankingan skor menggunakan metode Dice Sorensen.
 
 ## 🛠️ Teknologi yang Digunakan
 
 - **Bahasa Pemrograman:** Python 3
 - **Library:** Tidak menggunakan library eksternal.
-- **Konsep:** Information Retrieval, Tokenisasi, Dictionary, Inverted Index, dan Boolean Retrieval Model.
-
-## 📂 Struktur Proyek
-
-```text
-boolean-retrieval/
-│
-├── app.py (Jawaban Tugas/No. 1)
-├── app2.py (Jawaban Tugas/No. 2)
-└── README.md
+- **Konsep:** Information Retrieval, Tokenisasi, Dictionary, Inverted Index, Boolean Retrieval Model, Overlap, Jaccard, dan Dice Sorensen Model.
