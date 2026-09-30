@@ -3,12 +3,10 @@
 # ------------------------------------------------------------
 
 objects = {
-    1: "mahasiswa fasilkom universitas jember adalah mahasiswa hebat",
-    2: "universitas jember memiliki 30.000 mahasiswa",
-    3: "saat ini fasilkom universitas jember memiliki tiga prodi",
-    4: "prodi pertama fasilkom universitas jember saat ini adalah prodi sistem informasi"
+    1: "mahasiswa fasilkom universitas jember adalah mahasiswa hebat. mahasiswa fasilkom universitas jember banyak memenangkan turnamen baik akademik maupun non akademik. mulai tahun pertama, mahasiswa fasilkom universitas jember telah menunjukkan semangat untuk maju yang sangat tinggi",
+    2: "prodi pertama fasilkom universitas jember adalah prodi sistem informasi. prodi sistem informasi fasilkom universitas jember mulai menerima mahasiswa pada tahun 2009. prodi sistem informasi fasilkom universitas jember berdiri sebagai prodi setara fakultas, sehingga prodi sistem informasi ini tidak berada di bawah fakultas manapun saat itu",
+    3: "prodi informatika fasilkom universitas jember memiliki matakuliah pilihan yang bernama STKI. matakuliah STKI ditawarkan untuk mahasiswa yang ingin mempelajari metode pencarian informasi dari sekumpulan dokumen teks yang merupakan data tidak terstruktur. matakuliah STKI ditawarkan pada semester 6. Saat ini matakuliah STKI ditempuh 24 mahasiswa"
 }
-
 
 # ------------------------------------------------------------
 # 2. REPRESENTASI OBJEK / TOKENISASI
@@ -225,39 +223,99 @@ display_results(
     not_result
 )
 
-def dice_sorensen_similarity(terms_a, terms_b):
+# ------------------------------------------------------------
+# 6. PERANGKINGAN DENGAN COSINE SIMILARITY
+# ------------------------------------------------------------
 
-    set_a = set(terms_a)
-    set_b = set(terms_b)
+from math import sqrt
 
-    intersection = set_a & set_b
 
-    if len(set_a) + len(set_b) == 0:
+def cosine_similarity(query_terms, doc_terms):
+
+    # Gabungkan term query dan dokumen
+    all_terms = set(query_terms) | set(doc_terms)
+
+    # Membuat vektor berdasarkan frekuensi term (TF)
+    query_vector = []
+    doc_vector = []
+
+    for term in all_terms:
+        query_vector.append(query_terms.count(term))
+        doc_vector.append(doc_terms.count(term))
+
+    # Dot product
+    dot_product = sum(
+        q * d
+        for q, d in zip(query_vector, doc_vector)
+    )
+
+    # Panjang vektor query
+    query_magnitude = sqrt(
+        sum(q ** 2 for q in query_vector)
+    )
+
+    # Panjang vektor dokumen
+    doc_magnitude = sqrt(
+        sum(d ** 2 for d in doc_vector)
+    )
+
+    # Menghindari pembagian dengan nol
+    if query_magnitude == 0 or doc_magnitude == 0:
         return 0.0
 
-    return 2*(len(intersection)) / len(set_a) + len(set_b)
+    # Cosine Similarity
+    return dot_product / (query_magnitude * doc_magnitude)
 
 
-def rank_dice_sorensen(query_terms, documents):
+def rank_cosine_similarity(query_terms, documents):
 
     scores = {}
 
     for doc_id, doc_terms in documents.items():
-        score = dice_sorensen_similarity(query_terms, doc_terms)
+
+        score = cosine_similarity(
+            query_terms,
+            doc_terms
+        )
+
         if score > 0:
             scores[doc_id] = score
 
-    # urutkan berdasarkan skor (value), dari besar ke kecil
-    ranked = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+    # Urutkan skor dari terbesar ke terkecil
+    ranked = sorted(
+        scores.items(),
+        key=lambda item: item[1],
+        reverse=True
+    )
 
     return ranked
 
 
 print("\n" + "=" * 70)
-print("6. PERANGKINGAN DENGAN KOEFISIEN DICE SORENSEN")
+print("6. PERANGKINGAN DENGAN COSINE SIMILARITY")
 print("=" * 70)
 
-ranking = rank_dice_sorensen(theta, documents)
+ranking = rank_cosine_similarity(
+    theta,
+    documents
+)
+
+if not ranking:
+
+    print("Tidak ada dokumen yang relevan")
+
+else:
+
+    for peringkat, (doc_id, score) in enumerate(
+        ranking,
+        start=1
+    ):
+
+        print(
+            f"{peringkat}. Obj {doc_id} "
+            f"(skor: {score:.3f}) : "
+            f"{objects[doc_id]}"
+        )
 
 if not ranking:
     print("Tidak ada dokumen yang relevan")
@@ -269,8 +327,3 @@ else:
 print("\n" + "=" * 70)
 print("PROGRAM SELESAI")
 print("=" * 70)
-
-
-
-# 2|A∩B| 
-# |A| + |B|
